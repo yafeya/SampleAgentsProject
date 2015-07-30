@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleIOAgent", "SampleIOAgent\SampleIOAgent.csproj", "{18929F21-4865-4E8B-9675-F646CB1ADF7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUIAgent", "SampleUIAgent\SampleUIAgent.csproj", "{05CB85FB-87EF-408D-A0A2-924F9C873AB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18929F21-4865-4E8B-9675-F646CB1ADF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18929F21-4865-4E8B-9675-F646CB1ADF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18929F21-4865-4E8B-9675-F646CB1ADF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18929F21-4865-4E8B-9675-F646CB1ADF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05CB85FB-87EF-408D-A0A2-924F9C873AB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05CB85FB-87EF-408D-A0A2-924F9C873AB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05CB85FB-87EF-408D-A0A2-924F9C873AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05CB85FB-87EF-408D-A0A2-924F9C873AB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
