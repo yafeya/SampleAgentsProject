@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sampleInfo>
+  <sampleInterface connectionTimeout="15000" busAddress="10" VisaName="SAMP0" SiclName="samp" LU="100">
+    <sampleConnection manufacture="Keysight" model="Sample001" sn="X01234" firmwareVersion="1.0.0.1" ipAddress="192.168.56.128" deviceName="inst0"/>
+  </sampleInterface>
+  <sampleInterface connectionTimeout="5000" busAddress="0" VisaName="SAMP1" SiclName="samp1" LU="101">
+    <sampleConnection manufacture="Keysight" model="Sample002" sn="X01234" firmwareVersion="1.0.0.1" ipAddress="192.168.56.130" deviceName="inst0"/>
+  </sampleInterface>
+</sampleInfo>

@@ -30,8 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ACE2-Common">
+      <HintPath>..\References\ACE2-Common.dll</HintPath>
+    </Reference>
     <Reference Include="ACE2-CoreServerFramework">
       <HintPath>..\References\ACE2-CoreServerFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="AgtKfLib">
+      <HintPath>..\References\AgtKfLib.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonOsAbstractions">
+      <HintPath>..\References\CommonOsAbstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\References\Microsoft.Practices.Prism.dll</HintPath>
@@ -51,7 +60,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consts.cs" />
+    <Compile Include="HwConfigSample.cs" />
+    <Compile Include="ModelDeviceSample.cs" />
+    <Compile Include="ModelInterfaceSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleHardwareDetector.cs" />
+    <Compile Include="SampleIOAgent.cs" />
+    <Compile Include="Utilities\LUComparer.cs" />
+    <Compile Include="Utilities\SampleIOAgentComparer.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sample.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
