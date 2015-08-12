@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<sampleInfo>
+  <sampleInterface connectionTimeout="10000" busAddress="1" VisaName="SAMP0" SiclName="samp" LU="100">
+    <sampleConnection manufacture="KT" model="DEV001" sn="X01234" firmwareVersion="1.0.0.1" ipAddress="192.168.56.128" deviceName="inst0"/>
+  </sampleInterface>
+</sampleInfo>

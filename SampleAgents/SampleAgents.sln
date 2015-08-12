@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUIAgent", "SampleUIAg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleIOAgentTest", "SampleIOAgentTest\SampleIOAgentTest.csproj", "{BDA313D7-CD59-4500-9927-4A040367C49F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{2768F61B-A915-485F-B511-7E55C5D35946}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BDA313D7-CD59-4500-9927-4A040367C49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDA313D7-CD59-4500-9927-4A040367C49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDA313D7-CD59-4500-9927-4A040367C49F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2768F61B-A915-485F-B511-7E55C5D35946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2768F61B-A915-485F-B511-7E55C5D35946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2768F61B-A915-485F-B511-7E55C5D35946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2768F61B-A915-485F-B511-7E55C5D35946}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
