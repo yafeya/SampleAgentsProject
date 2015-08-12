@@ -100,7 +100,7 @@ namespace SampleIOAgentTest
         [TestMethod()]
         [TestCategory("SampleIOAgent")]
         [DeploymentItem(@"Samples\sample.xml", "Samples")]
-        public void VerifyElementTestDevice2()
+        public void VerifyElementTestDevice()
         {
             var intfc1 = new ModelInterfaceSample { VisaInterfaceId = "SAMP0", SiclInterfaceId = "samp", LogicalUnit = "100" };
             var instrument1 = new ModelDeviceSample 
