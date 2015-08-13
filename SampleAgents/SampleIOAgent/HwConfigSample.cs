@@ -20,7 +20,6 @@ namespace Keysight.KCE.IOSamples
         private INonconfigDataManager _nonconfigDataManager = null;
         private IAceLog _log = null;
         private IIntegrationService _integrationSvc = null;
-
         private bool _tulipParmsInitialized = false;
 
         public HwConfigSample(INonconfigDataManager nonconfigDataManager, IIntegrationService integrationSvc, IAceLog log)
@@ -28,12 +27,14 @@ namespace Keysight.KCE.IOSamples
             _nonconfigDataManager = nonconfigDataManager;
             _integrationSvc = integrationSvc;
             _log = log;
+            SampleFileName = SAMPLE_FILENAME;
         }
+        public string SampleFileName { get; set; }
 
         private SampleHardwareDetector GenerateHardwareDetector()
         {
             SampleHardwareDetector detector = null;
-            var fileName = Path.Combine(_integrationSvc.GetIOAgentIntegrationPath(), SAMPLE_FILENAME);
+            var fileName = Path.Combine(_integrationSvc.GetIOAgentIntegrationPath(), SampleFileName);
             if (File.Exists(fileName))
             {
                 detector = new SampleHardwareDetector(fileName);
@@ -98,37 +99,16 @@ namespace Keysight.KCE.IOSamples
         }
         private bool IsInterfacePresentProc(ModelInterfaceSample interfaceToCheck, ModelInterface[] availableInterfaces)
         {
-            bool isPresent = false;
-            foreach (var availableInterface in availableInterfaces)
-            {
-                var specificInterface = availableInterface as ModelInterfaceSample;
-                if (specificInterface != null
-                    && specificInterface.IsEquivalent(interfaceToCheck))
-                {
-                    isPresent = true;
-                    break;
-                }
-            }
-            return isPresent;
+            return interfaceToCheck.IsInterfacePresent(availableInterfaces);
         }
         private bool IsDevicePresentProc(ModelDeviceSample deviceToCheck, ModelInterfaceSample parentInterface)
         {
             bool isPresent = false;
-            // If we didn't get a ModelDeviceTcpip or it doesn't have a VisaName, it's not present
-            if (deviceToCheck == null || string.IsNullOrWhiteSpace(deviceToCheck.VisaName))
-                return false;
             var hwDetector = GenerateHardwareDetector();
             if (hwDetector != null)
             {
                 var availableDevices = hwDetector.GetConnectedInstruments(parentInterface);
-                foreach (var availableDevice in availableDevices)
-                {
-                    if (availableDevice.IsEquivalent(deviceToCheck))
-                    {
-                        isPresent = true;
-                        break;
-                    }
-                }
+                isPresent = deviceToCheck.IsDevicePresent(availableDevices);
             }
             return isPresent;
         }
@@ -137,12 +117,12 @@ namespace Keysight.KCE.IOSamples
 
         public string AgentId
         {
-            get { return SampleIOAgent.GetAgentId(); }
+            get { return Consts.SAMPLE_IOAGENT_ID; }
         }
 
         public string TulipDriverName
         {
-            get { return SampleIOAgent.GetTulipDriverName(); }
+            get { return Consts.TUILIPDRIVER_NAME; }
         }
 
         public int GetAgentVersion()

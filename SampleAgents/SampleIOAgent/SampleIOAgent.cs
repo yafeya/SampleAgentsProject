@@ -14,6 +14,7 @@ using Agilent.ACE2.Shared.Utilities;
 using Agilent.ACE2.CommonUtilities;
 using System.Text.RegularExpressions;
 using Agilent.ACE2.Shared.RemoteAPI;
+using System.Threading.Tasks;
 
 namespace Keysight.KCE.IOSamples
 {
@@ -24,12 +25,13 @@ namespace Keysight.KCE.IOSamples
 
         private IUnityContainer _container = null;
         private IAceLog _log = null;
-        private IRequestService _requestService = null;
 
         public SampleIOAgent(IUnityContainer container)
         {
             _container = container;
         }
+
+        public int BackgroundWaiting { get; set; }
 
         public static string GetAgentId()
         {
@@ -44,7 +46,6 @@ namespace Keysight.KCE.IOSamples
         {
             return Consts.TUILIPDRIVER_NAME;
         }
-
         private static void AddInfoToInterface(InterfaceDataRecord raw, ModelInterfaceSample specificIntfc)
         {
             raw.AddProperty(Consts.CONNECTION_TIMEOUT_KEY, specificIntfc.ConnectionTimeout.ToString());
@@ -55,9 +56,12 @@ namespace Keysight.KCE.IOSamples
             raw.AddProperty(Consts.IPADDRESS_KEY, specificDevice.IPAddress);
             raw.AddProperty(Consts.DEVICENAME_KEY, specificDevice.DeviceName);
         }
-        private static ModelInterface[] GetUnconfigedInterfaces(AceModelRestricted model)
+        
+        private ModelInterface[] GetUnconfigedInterfaces(AceModelRestricted model)
         {
-            throw new NotImplementedException();
+            IConfigDll hwconfig = _container.Resolve<IConfigDll>(AgentName);
+            if ((hwconfig != null) || (model != null)) return Enumerable.Empty<ModelInterface>().ToArray();
+            return model.GetUnconfigedSampleInterfaces(hwconfig).ToArray();
         }
         private ModelElement GetAddingElement(string deviceName, AceModelRestricted model)
         {
@@ -186,6 +190,11 @@ namespace Keysight.KCE.IOSamples
             var element = ReconstituteInterface(intfcRecord);
             return element;
         }
+        private void FindAndUpdateDevices(IConfigDll hwconfig, List<ModelElement> discoveredList, ModelInterfaceSample intfc, AceModelRestricted model)
+        {
+            var connectedDevices = hwconfig.GetAvailableDevices(intfc);
+            discoveredList.AddRange(connectedDevices);
+        }
 
         #region IBasicAgent Members
 
@@ -214,8 +223,7 @@ namespace Keysight.KCE.IOSamples
             _container.RegisterInstance<IVerifyStrategy>(AgentId, this, new ContainerControlledLifetimeManager());
             _container.RegisterInstance<IManuallyAdd>(AgentId, this, new ContainerControlledLifetimeManager());
             _container.RegisterInstance<IDiscoveryBackgroundProcess>(AgentId, this, new ContainerControlledLifetimeManager());
-
-            _requestService = _container.Resolve<IRequestService>();
+            _container.RegisterType<SampleDiscoveryWatcher>(new ContainerControlledLifetimeManager());
         }
 
         #endregion
@@ -224,7 +232,11 @@ namespace Keysight.KCE.IOSamples
 
         public void StartBackgroundProcessing(CancellationToken token)
         {
-            throw new NotImplementedException();
+            Task backgroundTask = Task.Factory.StartNew(() =>
+                {
+                    var watcher = _container.Resolve<SampleDiscoveryWatcher>();
+                    watcher.Start(token);
+                }, token);
         }
 
         #endregion
@@ -233,7 +245,44 @@ namespace Keysight.KCE.IOSamples
 
         public List<ModelElement> DoDiscovery(ModelElement discoveryRoot, AceModelRestricted model)
         {
-            throw new NotImplementedException();
+            // Discover devices on interfaces
+            // If discoveryRoot is null or empty discovery devices on all interfaces associated with this agent.
+            // If discoveryRoot is specified, verify the presence of the interface and discover all devices on it.
+            // - The model paramenter contains elements that are currently known - treat it as read-only
+            // - Add only newly discovered or deleted elements to the output list.
+            // - Notes:
+            //      - Only devices are discovered here. Interfaces are discovered and added to the model in AutoConfig().
+            //      - Elements in the output list will later be verified using DoVerify().
+            //      - If we are not confident that a discovered device is the same as one already in the model,
+            //        then we should copy it to the output List so it will later be verified.
+
+            //string doDiscoveryTitle = string.Format("DoDiscovery of {0}", (discoveryRoot != null) ? discoveryRoot.ToString() : "<null>");
+            //LogUtils.LogElements(_log, this, doDiscoveryTitle, model.GetInterfaces()); // Verbose
+            if (_log != null && discoveryRoot != null)
+            {
+                var id = discoveryRoot.PersistentId;
+                string msg = string.Format("Begin discovery of '{0}'", id);
+                _log.Message(msg, LogUtils.MethodName(this));
+            }
+            var list = new List<ModelElement>();
+            var intfc = discoveryRoot as ModelInterfaceSample;
+            if (intfc != null)
+            {
+                IConfigDll hwconfig = _container.Resolve<IConfigDll>(AgentName);
+                hwconfig.InitializeDll();
+                var intfcCopy = intfc.MakeCopy() as ModelInterfaceSample;
+                var availableIntfcs = hwconfig.GetAvailableInterfaces()
+                    .Where(i => i is ModelInterfaceSample)
+                    .Select(i => i as ModelInterfaceSample);
+                if (intfcCopy.IsInterfacePresent(availableIntfcs) 
+                    || intfc.StaticallyDefined)
+                {
+                    list.Add(intfcCopy);
+                    FindAndUpdateDevices(hwconfig, list, intfc, model);
+                }
+                hwconfig.UninitializeDll();
+            }
+            return list;
         }
 
         #endregion
@@ -242,7 +291,18 @@ namespace Keysight.KCE.IOSamples
 
         public ModelElement DoVerify(ModelElement element, AceModelRestricted model)
         {
-            throw new NotImplementedException();
+            // For interface that are not PnP and can come and go, verify that they are still present.
+            //   (e.g. RemoteGPIB, etc.)
+            // In most cases, nothing will need to be done to verify an interface.
+            // Return a copy of the input element.
+            // The following values need to be set in the returned element:
+            //   Verified = true means it has been through this method
+            //   Failed = true / false
+            if (element == null) return null;
+            var elementCopy = element.MakeCopy();
+            IConfigDll hwconfig = _container.Resolve<IConfigDll>(AgentName);
+            hwconfig.VerifyElement(elementCopy);
+            return elementCopy;
         }
 
         #endregion

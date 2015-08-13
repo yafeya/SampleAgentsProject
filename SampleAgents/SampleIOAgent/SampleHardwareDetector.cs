@@ -80,6 +80,7 @@ namespace Keysight.KCE.IOSamples
             var visaNameAttr = intfcElement.Attribute(Consts.VISA_NAME_ATTR);
             var siclNameAttr = intfcElement.Attribute(Consts.SICL_NAME_ATTR);
             var luAttr = intfcElement.Attribute(Consts.LU_ATTR);
+            var autoDiscoverAttr = intfcElement.Attribute(Consts.AUTO_DISCOVER);
             if (connectionTimeoutAttr != null
                 && busAddressAttr != null
                 && visaNameAttr != null
@@ -93,6 +94,10 @@ namespace Keysight.KCE.IOSamples
                 intfc.ConnectionTimeout = int.TryParse(connectionTimeoutAttr.Value, out connectionTimeout) ? connectionTimeout : 5000;
                 intfc.BusAddress = int.TryParse(busAddressAttr.Value, out busAddress) ? busAddress : 0;
                 intfc.LogicalUnit = int.TryParse(luAttr.Value, out lu) ? luAttr.Value : "100";
+
+                bool autoDiscover = false;
+                autoDiscover = autoDiscoverAttr != null && bool.TryParse(autoDiscoverAttr.Value, out autoDiscover) ? autoDiscover : false;
+                intfc.AutoDiscoverDevices = autoDiscover;
             }
             return intfc;
         }

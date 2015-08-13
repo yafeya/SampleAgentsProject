@@ -65,9 +65,11 @@
     <Compile Include="ModelDeviceSample.cs" />
     <Compile Include="ModelInterfaceSample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleDiscoveryWatcher.cs" />
     <Compile Include="SampleHardwareDetector.cs" />
     <Compile Include="SampleIOAgent.cs" />
     <Compile Include="Utilities\LUComparer.cs" />
+    <Compile Include="Utilities\ModelElementExtensions.cs" />
     <Compile Include="Utilities\SampleIOAgentComparer.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>

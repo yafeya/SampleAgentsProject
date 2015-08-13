@@ -29,6 +29,7 @@ namespace Keysight.KCE.IOSamples
         public const string INSTRUMENT_ELEMENT = "sampleConnection";
 
         public const string CONNECTION_TIMEOUT_ATTR = "connectionTimeout";
+        public const string AUTO_DISCOVER = "autoDiscover";
         public const string BUS_ADDRESS_ATTR = "busAddress";
         public const string VISA_NAME_ATTR = "VisaName";
         public const string SICL_NAME_ATTR = "SiclName";
