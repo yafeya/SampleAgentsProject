@@ -15,7 +15,7 @@ namespace Keysight.KCE.IOSamples
         public const string IPADDRESS_KEY = "ipAddr";
         public const string DEVICENAME_KEY = "devName";
         public const string DEFAULT_LU = "100";
-        public const string SAMPLE_INSTRUMENT = "Sample Device";
+        public const string SAMPLE_INSTRUMENT = "Sample Instrument";
         public const string SAMPLE_INTERFACE = "Sample Interface";
         public const string EDITABLE_FORMATE = "{0} {1}";
         public const string DEFAULT_INTFC_VISANAME = "SAMP0";

@@ -119,7 +119,7 @@ namespace SampleIOAgentTest
             var container = new UnityContainer();
             var sampleAgent = new SampleIOAgent(container);
             var getAddingElementsMethod = new PrivateObject(sampleAgent);
-            var result = getAddingElementsMethod.Invoke("GetAddingElement", BindingFlags.NonPublic | BindingFlags.Instance, "Sample Device", model);
+            var result = getAddingElementsMethod.Invoke("GetAddingElement", BindingFlags.NonPublic | BindingFlags.Instance, "Sample Instrument", model);
             var device = result as ModelDeviceSample;
             return device;
         }

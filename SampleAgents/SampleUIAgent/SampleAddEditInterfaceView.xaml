@@ -1,0 +1,196 @@
+﻿<UserControl x:Class="Keysight.KCE.UISamples.SampleAddEditInterfaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:common="clr-namespace:ACE2_UI;assembly=ACE2-UIFramework"
+             xmlns:AceUI="clr-namespace:ACE2_UI.UI;assembly=ACE2-UIFramework"
+             xmlns:WslControls="clr-namespace:Agilent.Ccl.Wsl.UI.Controls;assembly=Agilent.Ccl.Wsl"
+             xmlns:WslBehaviors="clr-namespace:Agilent.Ccl.Wsl.UI.Behaviors;assembly=Agilent.Ccl.Wsl"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <AceUI:IntToPersistantStringConverter x:Key="intToStringConverter" />
+        </Grid.Resources>
+
+        <i:Interaction.Behaviors>
+            <WslBehaviors:FrameworkElementFocusBehavior
+                                        FocusedElement="{Binding ElementName=m_visaNameComboBox}"
+                                        ActivateFocus="{Binding Initialized}" />
+            <WslBehaviors:UIElementAnimationsBehavior 
+                                        Animation="AppearanceFromLeftStoryboard"
+                                        Trigger="OnVisible" />
+        </i:Interaction.Behaviors>
+
+        <WslControls:AcclHeaderFooterItemsControl Header="{Binding Header, FallbackValue={common:Res HeaderAddSampleInterface}}">
+            <!--Add Connection address-->
+            <HeaderedContentControl x:Name="AddConnectionAddresses"
+                                Visibility="{Binding AddConnectionAddressesVisibility}"
+                                Header="{common:Res HeaderConnectionAddresses}">
+                <!-- This is where all the Content definition happens for each prompt header group-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <!-- Standard deadspace on top of each section header-->
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <!-- Standard deadspace on top of each section header-->
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"
+                                          SharedSizeGroup="FirstColumn" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*"
+                                          MinWidth="100"
+                                          SharedSizeGroup="SharedWidth" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label x:Name="m_visaNameLabel"
+                           Content="{common:Res LabelVisaInterfaceID}" />
+                    <ComboBox x:Name="m_visaNameComboBox"
+                              ItemsSource="{Binding AvailableVisaIds, Mode=OneWay}"
+                              SelectedValue="{Binding VisaInterfaceId}"
+                              Grid.Column="2" />
+
+                    <Label x:Name="m_siclNameLabel"
+                           Content="{common:Res LabelSiclInterfaceID}"
+                           Grid.Row="2"
+                           Grid.Column="0" />
+                    <ComboBox x:Name="m_siclAddressInputControl"
+                              ItemsSource="{Binding AvailableSiclIds, Mode=OneWay}"
+                              SelectedValue="{Binding SiclInterfaceId}" 
+                              Grid.Row="2"
+                              Grid.Column="2" />
+
+                    <Label x:Name="m_logicalUnitLabel"
+                           Content="{common:Res LabelLogicalUnit}" 
+                           Grid.Row="4"
+                           Grid.Column="0" />
+                    <ComboBox x:Name="m_logicalUnitComboBox"
+                              ItemsSource="{Binding AvailableLus, Mode=OneWay}"
+                              SelectedValue="{Binding LogicalUnit}"
+                              Grid.Row="4"
+                              Grid.Column="2" />
+
+                </Grid>
+            </HeaderedContentControl>
+            <!--Edit Connection address-->
+            <HeaderedContentControl x:Name="EditConnectionAddresses"
+                                Visibility="{Binding EditConnectionAddressesVisibility}"
+                                Header="{common:Res LableConnectionAddressesReadOnly}">
+                <!-- This is where all the Content definition happens for each prompt header group-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <!-- Standard deadspace on top of each section header-->
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+                        <!-- Standard deadspace on top of each section header-->
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="Auto" />
+
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"
+                                          SharedSizeGroup="FirstColumn" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*"
+                                          MinWidth="100"
+                                          SharedSizeGroup="SharedWidth" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Just call out the fact that all text boxes in this grid will be transparent like textblocks but give visual keys for thier copiability-->
+                    <Grid.Resources>
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource Accl.Transparent.TextBox.Style}" />
+                    </Grid.Resources>
+
+                    <Label Content="{common:Res LabelVisaInterfaceID}" />
+                    <TextBox Text="{Binding VisaInterfaceId}"
+                             Grid.Row="0"
+                             Grid.Column="2">
+                        <i:Interaction.Behaviors>
+                            <WslBehaviors:TextBoxSelectAllContentBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <Label Content="{common:Res LabelSiclInterfaceID}" 
+                           Grid.Row="2" />
+                    <TextBox Text="{Binding SiclInterfaceId}"
+                             Grid.Row="2"
+                             Grid.Column="2">
+                        <i:Interaction.Behaviors>
+                            <WslBehaviors:TextBoxSelectAllContentBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                    <Label Content="{common:Res LabelLogicalUnit}"
+                           Grid.Row="4" />
+                    <TextBox Text="{Binding LogicalUnit}"
+                             Grid.Row="4"
+                             Grid.Column="2">
+                        <i:Interaction.Behaviors>
+                            <WslBehaviors:TextBoxSelectAllContentBehavior />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+
+                </Grid>
+            </HeaderedContentControl>
+            <!--Add or Edit Properties-->
+            <HeaderedContentControl x:Name="configureProperties"
+                                    Header="{common:Res HeaderConfigSampleProperties}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"
+                                      SharedSizeGroup="FirstColumn" />
+                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="*"
+                                      MinWidth="100"
+                                      SharedSizeGroup="SharedWidth" />
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="connectionTimeoutLabel"
+                           Content="{common:Res LabelConnectionTimeout}"/>
+                    <TextBox Grid.Column="2"
+                             x:Name="connectionTimeoutTextBox">
+                        <TextBox.Text>
+                            <Binding Path="ConnectionTimeout" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource intToStringConverter}">
+                                <Binding.ValidationRules>
+                                    <AceUI:IntRangeValidationRule Min="0" Max="65535"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <Label x:Name="busAddressLabel"
+                           Content="{common:Res LabelBusAddress}"
+                           Grid.Row="2"/>
+                    <TextBox x:Name="busAddressTextBox"
+                             Grid.Row="2"
+                             Grid.Column="2">
+                        <TextBox.Text>
+                            <Binding Path="BusAddress" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource intToStringConverter}">
+                                <Binding.ValidationRules>
+                                    <AceUI:IntRangeValidationRule Min="0" Max="65535"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </Grid>
+            </HeaderedContentControl>
+            
+            <WslControls:AcclHeaderFooterItemsControl.Footer>
+                <Binding Path="FooterContent"/>
+            </WslControls:AcclHeaderFooterItemsControl.Footer>
+
+        </WslControls:AcclHeaderFooterItemsControl>
+    </Grid>
+</UserControl>
