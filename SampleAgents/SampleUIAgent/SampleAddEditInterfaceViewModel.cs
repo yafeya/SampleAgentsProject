@@ -60,6 +60,23 @@ namespace Keysight.KCE.UISamples
 
         #region Override Methods
 
+        public override bool IsEdit()
+        {
+            var builder = new StringBuilder();
+            builder.Append(Consts.SAMPLE_INTERFACE).Append(" ").Append(Consts.SAMPLE_VISA_PREFIX);
+            var intfcEditPrefix = builder.ToString();
+            bool isEdit = false;
+            if (DeviceName.Equals(Consts.SAMPLE_INTERFACE))
+            {
+                isEdit = false;
+            }
+            else if (DeviceName.StartsWith(intfcEditPrefix))
+            {
+                isEdit = true;
+            }
+            return isEdit;
+        }
+
         public override void LocalInit()
         {
             AddConnectionAddressesVisibility = IsEdit() ? Visibility.Collapsed : Visibility.Visible;
@@ -79,7 +96,7 @@ namespace Keysight.KCE.UISamples
                     AvailableVisaIds = GenerateAvailableInterfaceList(Consts.SAMPLE_VISA_PREFIX, InfrastructureConstants.MinVisaIDRange,
                         InfrastructureConstants.MaxVisaIDCount, allIds.Item1, VisaInterfaceId);
                     AvailableSiclIds = GenerateAvailableInterfaceList(Consts.SAMPLE_SICL_PREFIX, InfrastructureConstants.MinSiclIDRange, InfrastructureConstants.MaxSiclIDCount, allIds.Item2, SiclInterfaceId);
-                }, 
+                },
                 msg => _errorList.Add(msg));
 
             Api.GetAllUsedLusAsync(arg =>

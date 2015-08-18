@@ -20,8 +20,6 @@ namespace Keysight.KCE.UISamples
 {
     public class SampleAddEditInstrumentViewModel : UiAgentBaseViewModel, IHelper
     {
-        private ObservableCollection<string> _usableVisaInterfaceIds = new ObservableCollection<string>();
-
         public SampleAddEditInstrumentViewModel(IUnityContainer container, Ace2ApiServiceModule api, ILoggerFacade log,
             UiModel model, IEventAggregator eventAggregator)
             : base(container, api, log, eventAggregator)
@@ -62,10 +60,7 @@ namespace Keysight.KCE.UISamples
                 OnPropertyChanged("InstrumentName");
             }
         }
-        public ObservableCollection<string> UsableVisaInterfaceIds
-        {
-            get { return _usableVisaInterfaceIds; }
-        }
+        public ObservableCollection<string> UsableVisaInterfaceIds { get; set; }
         public string ParentVisaInterfaceId
         {
             get
@@ -107,11 +102,8 @@ namespace Keysight.KCE.UISamples
                     Action update = () =>
                     {
                         var allIds = ExtractUsedInterfaceIdsFromArgMap(arg, Consts.SAMPLE_VISA_PREFIX);
-                        UsableVisaInterfaceIds.Clear();
-                        foreach (var id in allIds.Item1.OrderBy(x => x, new NaturalStringComparer()))
-                        {
-                            UsableVisaInterfaceIds.Add(id);
-                        }
+                        UsableVisaInterfaceIds = new ObservableCollection<string>(allIds.Item1.OrderBy(x => x, new NaturalStringComparer()));
+                        OnPropertyChanged(string.Empty);
                     };
                     Application.Current.Dispatcher.BeginInvoke(update, DispatcherPriority.Normal);
                 },
