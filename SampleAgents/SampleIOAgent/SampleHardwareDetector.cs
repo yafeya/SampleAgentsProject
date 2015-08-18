@@ -36,12 +36,12 @@ namespace Keysight.KCE.IOSamples
         }
         public IEnumerable<ModelDeviceSample> GetConnectedInstruments(ModelInterfaceSample intfc)
         {
-            var availableIntfcs = Enumerable.Empty<ModelDeviceSample>();
+            var availableInstruments = Enumerable.Empty<ModelDeviceSample>();
             Monitor.Enter(_modelList);
-            availableIntfcs = _modelList.Where(e => e is ModelDeviceSample && ((ModelDeviceSample)e).Parent.IsEquivalent(intfc))
+            availableInstruments = _modelList.Where(e => e is ModelDeviceSample && ((ModelDeviceSample)e).Parent.IsEquivalent(intfc))
                 .Select(e => (ModelDeviceSample)e);
             Monitor.Exit(_modelList);
-            return availableIntfcs;
+            return availableInstruments;
         }
 
         private void DetectHardware(string fileName)

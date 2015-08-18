@@ -12,12 +12,17 @@ using ACE2_UI.Services;
 using Agilent.ACE2.SharedNames;
 using System.Collections.ObjectModel;
 using ACE2_UI.Infrastructure.Commands;
+using ACE2_UI.Utilities;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Keysight.KCE.UISamples
 {
     public class SampleAddEditInstrumentViewModel : UiAgentBaseViewModel, IHelper
     {
-        public SampleAddEditInstrumentViewModel(IUnityContainer container, Ace2ApiServiceModule api, ILoggerFacade log, 
+        private ObservableCollection<string> _usableVisaInterfaceIds = new ObservableCollection<string>();
+
+        public SampleAddEditInstrumentViewModel(IUnityContainer container, Ace2ApiServiceModule api, ILoggerFacade log,
             UiModel model, IEventAggregator eventAggregator)
             : base(container, api, log, eventAggregator)
         { }
@@ -57,7 +62,10 @@ namespace Keysight.KCE.UISamples
                 OnPropertyChanged("InstrumentName");
             }
         }
-        public ObservableCollection<string> UsableVisaInterfaceIds { get; set; }
+        public ObservableCollection<string> UsableVisaInterfaceIds
+        {
+            get { return _usableVisaInterfaceIds; }
+        }
         public string ParentVisaInterfaceId
         {
             get
@@ -87,11 +95,30 @@ namespace Keysight.KCE.UISamples
         public override void LocalInit()
         {
             Header = IsEdit() ? SR.GetString("HeaderEditSampleDevice") : SR.GetString("HeaderAddSampleDevice");
-            
             if (Api == null)
             {
                 UsableVisaInterfaceIds.Clear();
                 UsableVisaInterfaceIds.Add(ParentVisaInterfaceId);
+            }
+            else
+            {
+                Api.GetAllUsedInterfaceIdsAsync(arg =>
+                {
+                    Action update = () =>
+                    {
+                        var allIds = ExtractUsedInterfaceIdsFromArgMap(arg, Consts.SAMPLE_VISA_PREFIX);
+                        UsableVisaInterfaceIds.Clear();
+                        foreach (var id in allIds.Item1.OrderBy(x => x, new NaturalStringComparer()))
+                        {
+                            UsableVisaInterfaceIds.Add(id);
+                        }
+                    };
+                    Application.Current.Dispatcher.BeginInvoke(update, DispatcherPriority.Normal);
+                },
+                msg =>
+                {
+                    if (Log != null) Log.Log(string.Format("Unable to get Sample instruments IDs: {0}", msg), Category.Warn, Priority.Low);
+                });
             }
             base.LocalInit();
         }

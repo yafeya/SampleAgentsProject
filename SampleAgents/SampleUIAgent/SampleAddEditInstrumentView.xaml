@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:common="clr-namespace:ACE2_UI;assembly=ACE2-UIFramework"
+             xmlns:utils="clr-namespace:Keysight.KCE.UISamples.Utilities"
              xmlns:WslControls="clr-namespace:Agilent.Ccl.Wsl.UI.Controls;assembly=Agilent.Ccl.Wsl"
              xmlns:WslBehaviors="clr-namespace:Agilent.Ccl.Wsl.UI.Behaviors;assembly=Agilent.Ccl.Wsl"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
@@ -19,9 +20,9 @@
                                     Trigger="OnVisible" />
     </i:Interaction.Behaviors>
 
-    <WslControls:AcclHeaderFooterItemsControl Header="{Binding Header, FallbackValue={common:Res HeaderAddSampleDevice}}">
+    <WslControls:AcclHeaderFooterItemsControl Header="{Binding Header, FallbackValue={utils:Res HeaderAddSampleDevice}}">
         <!--Add Instrument-->
-        <HeaderedContentControl Header="{common:Res HeaderSetAddress}">
+        <HeaderedContentControl Header="{utils:Res HeaderSetAddress}">
             <!-- This is where all the Content definition happens for each prompt header group-->
             <!-- No need for an itemscontrols since this is a contentcontrol. IE We want everyting in a single grid-->
             <Grid>
@@ -52,21 +53,23 @@
                 </Grid.Resources>
 
                 <Label x:Name="m_hostOrIpLabel"
-                       Content="{common:Res LabelHostNameOrIP}" />
+                       Content="{utils:Res LabelHostNameOrIP}" />
                 <TextBox Grid.Column="2"
                          x:Name="m_hostOrIpTextBox"
                          Text="{Binding IPAddress, UpdateSourceTrigger=PropertyChanged}" />
                 <Label x:Name="m_instrumentName"
-                       Content="{common:Res LableInstrumentName}" />
-                <TextBox Grid.Column="2"
-                         x:Name="m_instrumentNameTextBox"
-                         Text="{Binding InstrumentName, UpdateSourceTrigger=PropertyChanged}" />
-                <Label Content="{common:Res LabelSampleID}"
+                       Content="{utils:Res LableInstrumentName}" 
+                       Grid.Row="2"/>
+                <TextBox x:Name="m_instrumentNameTextBox"
+                         Text="{Binding InstrumentName, UpdateSourceTrigger=PropertyChanged}" 
+                         Grid.Row="2"
+                         Grid.Column="2"/>
+                <Label Content="{utils:Res LabelSampleID}"
                        Grid.Row="4" />
-                <ComboBox Grid.Row="4"
-                          Grid.Column="2"
-                          ItemsSource="{Binding UsableVisaInterfaceIds}"
-                          SelectedItem="{Binding ParentVisaInterfaceId, Mode=TwoWay}" />
+                <ComboBox ItemsSource="{Binding UsableVisaInterfaceIds}"
+                          SelectedItem="{Binding ParentVisaInterfaceId, Mode=TwoWay}" 
+                          Grid.Row="4"
+                          Grid.Column="2"/>
             </Grid>
         </HeaderedContentControl>
 

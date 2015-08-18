@@ -60,7 +60,7 @@ namespace Keysight.KCE.IOSamples
         private ModelInterface[] GetUnconfigedInterfaces(AceModelRestricted model)
         {
             IConfigDll hwconfig = _container.Resolve<IConfigDll>(AgentName);
-            if ((hwconfig != null) || (model != null)) return Enumerable.Empty<ModelInterface>().ToArray();
+            if ((hwconfig == null) || (model == null)) return Enumerable.Empty<ModelInterface>().ToArray();
             return model.GetUnconfigedSampleInterfaces(hwconfig).ToArray();
         }
         private ModelElement GetAddingElement(string deviceName, AceModelRestricted model)
@@ -87,6 +87,7 @@ namespace Keysight.KCE.IOSamples
             var device = new ModelDeviceSample();
             device.Parent = intfc;
             device.ParentId = intfc.PersistentId;
+            device.StaticallyDefined = true;
             return device;
         }
         private ModelElement GenerateAddingInterface(AceModelRestricted model)
@@ -128,6 +129,7 @@ namespace Keysight.KCE.IOSamples
             intfc.VisaInterfaceId = visaIntfID;
             intfc.SiclInterfaceId = siclIntfID;
             intfc.LogicalUnit = lu;
+            intfc.StaticallyDefined = true;
             return intfc;
         }
         private ArgMap GetElementRepresentation(ModelElement element)
@@ -142,7 +144,7 @@ namespace Keysight.KCE.IOSamples
                     var deviceData = CreateDeviceRepresentation(device);
                     properties = deviceData.Properties;
                 }
-                else if (element is ModelDeviceSample)
+                else if (element is ModelInterfaceSample)
                 {
                     var intfc = element as ModelInterface;
                     var intfcData = CreateInterfaceRepresentation(intfc);
@@ -302,6 +304,12 @@ namespace Keysight.KCE.IOSamples
             var elementCopy = element.MakeCopy();
             IConfigDll hwconfig = _container.Resolve<IConfigDll>(AgentName);
             hwconfig.VerifyElement(elementCopy);
+            var parent = model.FindEquivalentElement(elementCopy.Parent);
+            if (parent != null)
+            {
+                elementCopy.Parent = parent;
+                elementCopy.ParentId = parent.PersistentId;
+            }
             return elementCopy;
         }
 
@@ -370,7 +378,7 @@ namespace Keysight.KCE.IOSamples
         {
             if (device == null) return null;
             DeviceDataRecord raw = new DeviceDataRecord(device.ParentId);
-            if (device is ModelDeviceTcpip)
+            if (device is ModelDevice)
             {
                 AddCommonDevicePropertiesAsNVPairs(device, raw);
                 raw.AddProperty(AgentKeys.AgentName, AgentId);    // mark it as mine

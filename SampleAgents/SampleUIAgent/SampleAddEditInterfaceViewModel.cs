@@ -65,7 +65,6 @@ namespace Keysight.KCE.UISamples
             AddConnectionAddressesVisibility = IsEdit() ? Visibility.Collapsed : Visibility.Visible;
             EditConnectionAddressesVisibility = IsEdit() ? Visibility.Visible : Visibility.Collapsed;
             Header = IsEdit() ? SR.GetString("HeaderEditSampleInterface") : SR.GetString("HeaderAddSampleInterface");
-
             if (Api == null)
             {
                 AvailableSiclIds.Clear();

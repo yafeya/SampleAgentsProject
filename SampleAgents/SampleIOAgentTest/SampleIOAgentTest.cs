@@ -127,6 +127,19 @@ namespace SampleIOAgentTest
         [TestMethod()]
         [TestCategory("SampleIOAgent")]
         [DeploymentItem(@"Samples\sample.xml", "Samples")]
+        public void AutoConfigTest()
+        {
+            var container = GenerateContainer();
+            var agent = new SampleIOAgent(container);
+            var model = container.Resolve<AceModelRestricted>();
+            var intfcs = agent.AutoConfig(model);
+
+            Assert.IsTrue(intfcs.Count() >= 1);
+        }
+
+        [TestMethod()]
+        [TestCategory("SampleIOAgent")]
+        [DeploymentItem(@"Samples\sample.xml", "Samples")]
         public void DoDiscoveryTest()
         {
             var container = GenerateContainer();
@@ -194,6 +207,7 @@ namespace SampleIOAgentTest
             var agent = new SampleIOAgent(container);
             var sampleInterface1 = GenerateSampleInterface("SAMP0", "samp", "100");
             var sampleDevice1 = GenerateSampleDeice("KT", "DEV001", "X01234", "1.0.0.1", "192.168.56.128", "inst0");
+            sampleDevice1.ParentId = sampleInterface1.PersistentId;
             sampleDevice1.Parent = sampleInterface1;
             var model1 = container.Resolve<AceModelRestricted>();
             var verifiedInterface1 = agent.DoVerify(sampleInterface1, model1);
@@ -201,6 +215,7 @@ namespace SampleIOAgentTest
 
             var sampleInterface2 = GenerateSampleInterface("SAMP0", "samp", "100");
             var sampleDevice2 = GenerateSampleDeice("KT", "DEV002", "X012356", "1.0.0.1", "192.168.56.45", "inst0");
+            sampleDevice2.ParentId = sampleInterface2.PersistentId;
             sampleDevice2.Parent = sampleInterface2;
             var model2 = container.Resolve<AceModelRestricted>();
             var verifiedInterface2 = agent.DoVerify(sampleInterface2, model2);
@@ -208,6 +223,7 @@ namespace SampleIOAgentTest
 
             var sampleInterface3 = GenerateSampleInterface("SAMP1", "samp1", "101");
             var sampleDevice3 = GenerateSampleDeice("KT", "DEV001", "X01234", "1.0.0.1", "192.168.56.128", "inst0");
+            sampleDevice3.ParentId = sampleInterface3.PersistentId;
             sampleDevice3.Parent = sampleInterface3;
             var model3 = container.Resolve<AceModelRestricted>();
             var verifiedInterface3 = agent.DoVerify(sampleInterface3, model3);
@@ -215,6 +231,7 @@ namespace SampleIOAgentTest
 
             var sampleInterface4 = GenerateSampleInterface("SAMP1", "samp1", "101");
             var sampleDevice4 = GenerateSampleDeice("KT", "DEV002", "X012356", "1.0.0.1", "192.168.56.45", "inst0");
+            sampleDevice4.ParentId = sampleInterface4.PersistentId;
             sampleDevice4.Parent = sampleInterface4;
             var model4 = container.Resolve<AceModelRestricted>();
             var verifiedInterface4 = agent.DoVerify(sampleInterface4, model4);
@@ -234,15 +251,23 @@ namespace SampleIOAgentTest
 
             Assert.IsTrue(verifiedDevice1.Verified);
             Assert.IsTrue(!verifiedDevice1.Failed);
+            Assert.IsTrue(verifiedDevice1.Parent != null);
+            Assert.IsTrue(!string.IsNullOrEmpty(verifiedDevice1.ParentId));
 
             Assert.IsTrue(!verifiedDevice2.Verified);
             Assert.IsTrue(verifiedDevice2.Failed);
+            Assert.IsTrue(verifiedDevice2.Parent != null);
+            Assert.IsTrue(!string.IsNullOrEmpty(verifiedDevice2.ParentId));
 
             Assert.IsTrue(!verifiedDevice3.Verified);
             Assert.IsTrue(verifiedDevice3.Failed);
+            Assert.IsTrue(verifiedDevice3.Parent != null);
+            Assert.IsTrue(!string.IsNullOrEmpty(verifiedDevice3.ParentId));
 
             Assert.IsTrue(!verifiedDevice4.Verified);
             Assert.IsTrue(verifiedDevice4.Failed);
+            Assert.IsTrue(verifiedDevice4.Parent != null);
+            Assert.IsTrue(!string.IsNullOrEmpty(verifiedDevice4.ParentId));
         }
 
         [TestMethod()]

@@ -62,7 +62,8 @@ namespace Keysight.KCE.IOSamples
         private void VerfiyInterface(ModelInterfaceSample intfc)
         {
             ModelInterface[] availableInterfaces = GetAvailableInterfaces();
-            if (IsInterfacePresentProc(intfc, availableInterfaces))
+            if (IsInterfacePresentProc(intfc, availableInterfaces)
+                || intfc.StaticallyDefined)
             {
                 intfc.Verified = true;
                 intfc.Failed = false;
